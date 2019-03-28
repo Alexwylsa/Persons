@@ -13,9 +13,6 @@ import java.util.*;
 
 @Service
 public class UserService {
-
-
-
     @Autowired
     private UserRepo userRepo;
 
@@ -24,9 +21,6 @@ public class UserService {
 
 //    @Autowired
 //    private MailSender mailSender;
-
-
-
     @PostConstruct
     public void init(){
         if(userRepo.count()==0){
@@ -37,9 +31,6 @@ public class UserService {
         }
 
     }
-
-
-
 
     public List<User> qetAllUser() {
         return userRepo.findAll();

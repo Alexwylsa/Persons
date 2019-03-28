@@ -34,5 +34,7 @@ private Long id;
 
     private String filename;
 
+    private String mail;
+
 
 }
