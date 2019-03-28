@@ -19,20 +19,14 @@ import java.util.Set;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @CollectionTable(name = "staffs", joinColumns = @JoinColumn(name = "user_id"))
     private Long id;
-
-
     private String username;
-
     @JsonIgnore
     private String password;
-
     private boolean active;
 
-
-
-
+//    private String email;
+//    private String activationCode;
 
 //    @CollectionTable(name = "department", joinColumns = @JoinColumn(name = "id"))
 //    private String department_id;
@@ -46,15 +40,14 @@ public class User implements UserDetails {
 //
 //    private String filename;
 
-
-
     @ElementCollection(targetClass = Role.class, fetch =  FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-
-
+//    public boolean isAdmin() {
+//        return roles.contains(Role.ADMIN);
+//    }
 
     @Override
     public boolean isAccountNonExpired() {

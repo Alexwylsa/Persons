@@ -1,7 +1,7 @@
 package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Department;
-import com.alexwylsa.Persons.exeptions.NotFoundException;
+import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.DepartmentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

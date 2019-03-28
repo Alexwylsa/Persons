@@ -3,12 +3,15 @@ package com.alexwylsa.Persons.controller;
 import com.alexwylsa.Persons.domain.Staff;
 import com.alexwylsa.Persons.service.StaffService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/staffs")
+@RequestMapping("/staff")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class StaffController {
     @Autowired
     private StaffService staffService;
@@ -37,4 +40,16 @@ public class StaffController {
     public void deleteStaff(@PathVariable Long id, @RequestBody Staff staff){
         staffService.deleteStaff(staff);
     }
+
+    @PutMapping("{id}/image")
+    public Staff uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        return staffService.uploadImage(id, file);
+    }
+
+    @GetMapping("{id}/image")
+    public Staff getImage(@PathVariable Long id, @RequestParam("file") MultipartFile file){
+        return staffService.getImage(id, file);
+    }
+
+
 }

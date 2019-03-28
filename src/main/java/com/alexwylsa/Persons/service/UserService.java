@@ -1,13 +1,10 @@
 package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Role;
-import com.alexwylsa.Persons.domain.Staff;
 import com.alexwylsa.Persons.domain.User;
-import com.alexwylsa.Persons.exeptions.NotFoundException;
+import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +14,17 @@ import java.util.*;
 @Service
 public class UserService {
 
-    @Value("${upload.path}")
-    private String uploadPath;
+
 
     @Autowired
     private UserRepo userRepo;
 
     @Autowired
     private PasswordEncoder encoder;
+
+//    @Autowired
+//    private MailSender mailSender;
+
 
 
     @PostConstruct
@@ -51,9 +51,45 @@ public class UserService {
 
     public User addUser(User user)
             {
-
-
-        return userRepo.save(user);
+//                Optional<User> userFromDb = userRepo.findByUsername(user.getUsername());
+//
+//                if (userFromDb != null) {
+//                    return false;
+//                }
+//
+//                user.setActive(true);
+//                user.setRoles(Collections.singleton(Role.USER));
+//                user.setActivationCode(UUID.randomUUID().toString());
+//
+//                userRepo.save(user);
+//
+//                if (!StringUtils.isEmpty(user.getEmail())) {
+//                    String message = String.format(
+//                            "Hello, %s! \n" +
+//                                    "Welcome to Sweater. Please, visit next link: http://localhost:8080/activate/%s",
+//                            user.getUsername(),
+//                            user.getActivationCode()
+//                    );
+//
+//                    mailSender.send(user.getEmail(), "Activation code", message);
+//                }
+//
+//                return true;
+//    }
+//
+//    public boolean activateUser(String code) {
+//        User user = userRepo.findByActivationCode(code);
+//
+//        if (user == null) {
+//            return false;
+//        }
+//
+//        user.setActivationCode(null);
+//
+//        userRepo.save(user);
+//
+//        return true;
+                return userRepo.save(user);
     }
 
     public User updateUser(User user) {
@@ -64,33 +100,13 @@ public class UserService {
         userRepo.delete(user);
     }
 
-
-//    public User uploadUser(Long id, MultipartFile file) {
+//    public String userEditForm(Model model) {
+//        model.addAttribute("user", user);
+//        model.addAttribute("roles", Role.values());
 //
-//        if (file == null) {
-//            throw new EmptyFileException();
-//        }
-//
-//
-//        File uploadDir = new File(uploadPath);
-//
-//        if (!uploadDir.exists()) { //if not found
-//            uploadDir.mkdir(); //then create directory
-//        }
-//
-//        String uuidFile = UUID.randomUUID().toString();
-//        String resultFilename = uuidFile + "_" + file.getOriginalFilename();
-//
-//
-//        try {
-//            file.transferTo(new File(uploadPath + "/" + resultFilename));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        userRepo.findById(id);
-//        Optional<User>user;
-//        return resultFilename;
-//
+//        return "userEdit";
 //    }
+
+
+
 }

@@ -1,4 +1,4 @@
-package com.alexwylsa.Persons.exeptions;
+package com.alexwylsa.Persons.exceptions;
 
 public class EmptyFileException extends RuntimeException {
 }
