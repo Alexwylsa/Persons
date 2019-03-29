@@ -23,17 +23,15 @@ private Long id;
     private User user;
 
     private String first_name;
-
     private String last_name;
-
     private String age;
-
     private String sex;
 
-    private String department_id;
+    @ManyToOne()
+    @JoinColumn(name="department_id")
+    private Department department;
 
     private String filename;
-
     private String mail;
 
 

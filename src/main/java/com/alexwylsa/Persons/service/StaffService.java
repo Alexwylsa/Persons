@@ -31,7 +31,6 @@ public class StaffService {
     }
 
     public Staff addStaff(Staff staff) {
-
         return staffRepo.save(staff);
     }
 
@@ -43,30 +42,30 @@ public class StaffService {
         staffRepo.delete(staff);
     }
 
-    public Staff uploadImage(Long id, MultipartFile file) {
-
-        if (file == null) {
-            throw new EmptyFileException();
-        }
-
-        File uploadDir = new File(uploadPath);
-
-        if (!uploadDir.exists()) { //if not found
-            uploadDir.mkdir(); //then create directory
-        }
-
-        String uuidFile = UUID.randomUUID().toString();
-        String resultFilename = uuidFile + "_" + file.getOriginalFilename();
-
-        try {
-            file.transferTo(new File(uploadPath + "/" + resultFilename));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-       return staffRepo.save(uploadImage(id, file));
-    }
-
-    public Staff getImage(Long id, MultipartFile file) {
-        return staffRepo.findById(id).orElseThrow(() -> new NotFoundException());
-    }
+//    public Staff uploadImage(Long id, MultipartFile file) {
+//
+//        if (file == null) {
+//            throw new EmptyFileException();
+//        }
+//
+//        File uploadDir = new File(uploadPath);
+//
+//        if (!uploadDir.exists()) { //if not found
+//            uploadDir.mkdir(); //then create directory
+//        }
+//
+//        String uuidFile = UUID.randomUUID().toString();
+//        String resultFilename = uuidFile + "_" + file.getOriginalFilename();
+//
+//        try {
+//            file.transferTo(new File(uploadPath + "/" + resultFilename));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//       return staffRepo.save(uploadImage(id, file));
+//    }
+//
+//    public Staff getImage(Long id, MultipartFile file) {
+//        return staffRepo.findById(id).orElseThrow(() -> new NotFoundException());
+//    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/staff")
-@PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasAuthority('ADMIN, USER')")
 public class StaffController {
     @Autowired
     private StaffService staffService;
@@ -41,15 +41,15 @@ public class StaffController {
         staffService.deleteStaff(staff);
     }
 
-    @PutMapping("{id}/image")
-    public Staff uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        return staffService.uploadImage(id, file);
-    }
-
-    @GetMapping("{id}/image")
-    public Staff getImage(@PathVariable Long id, @RequestParam("file") MultipartFile file){
-        return staffService.getImage(id, file);
-    }
+//    @PutMapping("{id}/image")
+//    public Staff uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+//        return staffService.uploadImage(id, file);
+//    }
+//
+//    @GetMapping("{id}/image")
+//    public Staff getImage(@PathVariable Long id, @RequestParam("file") MultipartFile file){
+//        return staffService.getImage(id, file);
+//    }
 
 
 }

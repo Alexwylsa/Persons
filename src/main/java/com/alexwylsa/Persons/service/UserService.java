@@ -42,6 +42,12 @@ public class UserService {
 
     public User addUser(User user)
             {
+                Set<Role> roles = new HashSet<>();
+                roles.add(Role.ADMIN);
+
+                user.setPassword(encoder.encode(user.getPassword()));
+                user.setRoles(roles);
+
 //                Optional<User> userFromDb = userRepo.findByUsername(user.getUsername());
 //
 //                if (userFromDb != null) {
