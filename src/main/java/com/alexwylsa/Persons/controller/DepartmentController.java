@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -17,8 +18,8 @@ public class DepartmentController {
     private DepartmentService departmentService;
 
     @GetMapping
-    public List<Department> getAllDepartments(){
-        return departmentService.getAllDepartments();
+    public List<Department> getAllDepartments(@RequestParam(required = false) Optional<String> name, @RequestParam Integer page, @RequestParam Integer size){
+        return departmentService.getAllDepartments(name, page, size);
     }
 
     @GetMapping ("{id}")

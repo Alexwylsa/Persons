@@ -18,8 +18,13 @@ public class EmailController {
 
     @ResponseBody
     @RequestMapping("/sendSimpleEmail")
-    public String sendSimpleEmail(@AuthenticationPrincipal User requester, @RequestParam Long toUserId , Long staffIdFrom, Long staffIdTo) {
+    public String sendSimpleEmail(@AuthenticationPrincipal User requester,
+                                  @RequestParam Long toUserId ,
+                                  @RequestParam Long staffIdFrom,
+                                  @RequestParam Long staffIdTo,
+                                  @RequestParam String subject,
+                                  @RequestParam String text) {
 
-        return emailService.sendSimpleEmail(requester, toUserId, staffIdFrom, staffIdTo);
+        return emailService.sendSimpleEmail(requester, toUserId, staffIdFrom, staffIdTo, subject, text);
     }
 }

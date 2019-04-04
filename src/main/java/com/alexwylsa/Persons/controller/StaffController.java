@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,6 +41,10 @@ public class StaffController {
     @DeleteMapping("{id}")
     public void deleteStaff(@PathVariable Long id, @RequestBody Staff staff){
         staffService.deleteStaff(staff);
+    }
+    @PostMapping("{id}")
+    public void uploadPhoto(@PathVariable Long id, @RequestParam MultipartFile file) {
+        staffService.addPhoto(id, file);
     }
 
 }

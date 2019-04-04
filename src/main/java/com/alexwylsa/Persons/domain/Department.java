@@ -16,9 +16,8 @@ public class Department {
     @Id
     @GeneratedValue()
     private Long id;
-    private String department;
+    private String name;
 
-    @OneToOne()
-    @JoinColumn(name = "boss_id")
-    private Staff staff;
+    private Long bossId;
+
 }
