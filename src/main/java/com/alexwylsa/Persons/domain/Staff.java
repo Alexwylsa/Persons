@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,8 +24,8 @@ private Long id;
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String first_name;
-    private String last_name;
+    private String firstName;
+    private String lastName;
     private String age;
     private String sex;
 

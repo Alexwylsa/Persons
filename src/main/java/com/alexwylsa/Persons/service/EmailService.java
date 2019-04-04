@@ -38,8 +38,8 @@ public class EmailService {
 
         StringBuilder sb = new StringBuilder();
         sb.append("You have message from ")
-                .append(staffFrom.getFirst_name())
-                .append(" ").append(staffFrom.getLast_name()).append("\n")
+                .append(staffFrom.getFirstName())
+                .append(" ").append(staffFrom.getLastName()).append("\n")
                 .append(text);
 
 

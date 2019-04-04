@@ -1,15 +1,13 @@
 package com.alexwylsa.Persons.controller;
 
 import com.alexwylsa.Persons.domain.Staff;
-import com.alexwylsa.Persons.service.DBFileStorageService;
 import com.alexwylsa.Persons.service.StaffService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/staff")
@@ -19,8 +17,8 @@ public class StaffController {
     private StaffService staffService;
 
     @GetMapping
-    public List<Staff> getAllStaff(){
-        return staffService.getAllStaff();
+    public List<Staff> getAllStaff(@RequestParam(required = false) Optional<String> lastName, @RequestParam Integer page, @RequestParam Integer size){
+        return staffService.getAllStaff(lastName, page, size);
     }
 
     @GetMapping("{id}")

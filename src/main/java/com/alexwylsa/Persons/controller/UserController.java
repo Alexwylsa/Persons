@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @RestController
@@ -17,8 +18,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAllUser() {
-        return userService.qetAllUser();
+    public List<User> getAllUser(@RequestParam(required = false) Optional<String> username, @RequestParam Integer page, @RequestParam Integer size) {
+        return userService.qetAllUser(username, page, size);
     }
 
     @GetMapping ("{id}")
@@ -29,7 +30,6 @@ public class UserController {
     @PostMapping
     public User addUser(@RequestBody User user) {
         return userService.addUser(user);
-
     }
 
     @PutMapping("{id}")

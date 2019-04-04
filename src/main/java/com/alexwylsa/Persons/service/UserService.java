@@ -6,14 +6,16 @@ import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -33,8 +35,10 @@ public class UserService {
             userRepo.save(new User(null, "admin", encoder.encode("123"), true, roles));
         }
     }
-    public List<User> qetAllUser() {
-        return userRepo.findAll();
+    public List<User> qetAllUser(Optional<String> username, Integer page, Integer size) {
+        Pageable pagination = PageRequest.of(page, size);
+        return username.map(r->userRepo.findAllByUsernameContains(r, pagination)).orElseGet(()->userRepo
+                .findAll(pagination)).getContent();
     }
 
     public User getOneUser(Long id) {

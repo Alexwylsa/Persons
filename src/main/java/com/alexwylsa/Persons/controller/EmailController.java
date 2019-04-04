@@ -19,7 +19,7 @@ public class EmailController {
     @ResponseBody
     @RequestMapping("/sendSimpleEmail")
     public String sendSimpleEmail(@AuthenticationPrincipal User requester,
-                                  @RequestParam Long toUserId ,
+                                  @RequestParam Long toUserId,
                                   @RequestParam Long staffIdFrom,
                                   @RequestParam Long staffIdTo,
                                   @RequestParam String subject,
