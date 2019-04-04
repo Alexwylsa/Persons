@@ -11,11 +11,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 })
 public class PersonsApplication {
 
-
-
 	public static void main(String[] args) {
 		SpringApplication.run(PersonsApplication.class, args);
-
 
 	}
 

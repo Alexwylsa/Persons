@@ -30,13 +30,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/users/**").hasAuthority(Role.ADMIN.name())
-                .anyRequest().authenticated();
-
-
+                .antMatchers("/users/**")
+                .hasAuthority(Role.ADMIN.name())
+                .anyRequest().authenticated()
+                .and().logout().logoutSuccessUrl("/").permitAll();
 
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder(){

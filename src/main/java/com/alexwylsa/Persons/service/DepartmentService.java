@@ -13,34 +13,23 @@ public class DepartmentService {
     @Autowired
     private DepartmentRepo departmentRepo;
 
-
-
     public List<Department> getAllDepartments() {
-
         return departmentRepo.findAll();
-
     }
 
     public Department getDepartment(Long id) {
-
         return  departmentRepo.findById(id).orElseThrow(() -> new NotFoundException());
-
     }
 
     public Department addDepartment(Department department) {
-
         return departmentRepo.save(department);
     }
 
     public Department updateDepartment(Department department) {
-
         return departmentRepo.save(department);
     }
 
     public void deleteDepartment(Department department){
-
         departmentRepo.delete(department);
     }
-
-
 }

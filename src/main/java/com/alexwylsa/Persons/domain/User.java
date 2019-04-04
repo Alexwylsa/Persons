@@ -25,30 +25,10 @@ public class User implements UserDetails {
     private String password;
     private boolean active;
 
-
-//    private String email;
-//    private String activationCode;
-
-//    @CollectionTable(name = "department", joinColumns = @JoinColumn(name = "id"))
-//    private String department_id;
-//
-//
-//
-//    @Column(updatable = false)
-//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-//    @JsonView
-//    private LocalDateTime creationDate;
-//
-//    private String filename;
-
     @ElementCollection(targetClass = Role.class, fetch =  FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-
-//    public boolean isAdmin() {
-//        return roles.contains(Role.ADMIN);
-//    }
 
     @Override
     public boolean isAccountNonExpired() {
@@ -75,6 +55,4 @@ public class User implements UserDetails {
         return getRoles();
 
     }
-
-
 }

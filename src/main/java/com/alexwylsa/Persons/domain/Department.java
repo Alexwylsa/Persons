@@ -13,7 +13,6 @@ import javax.persistence.*;
 @Table(name= "department")
 
 public class Department {
-
     @Id
     @GeneratedValue()
     private Long id;
@@ -22,7 +21,4 @@ public class Department {
     @OneToOne()
     @JoinColumn(name = "boss_id")
     private Staff staff;
-
-
-
 }
