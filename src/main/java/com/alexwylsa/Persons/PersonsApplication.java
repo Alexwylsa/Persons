@@ -1,14 +1,11 @@
 package com.alexwylsa.Persons;
 
-import com.alexwylsa.Persons.property.FileStorageProperties;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
-@EnableConfigurationProperties({
-		FileStorageProperties.class
-})
+@ComponentScan
+@EnableAutoConfiguration
 public class PersonsApplication {
 
 	public static void main(String[] args) {

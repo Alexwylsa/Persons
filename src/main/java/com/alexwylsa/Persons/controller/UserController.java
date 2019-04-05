@@ -18,28 +18,35 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public List<User> getAllUser(@RequestParam(required = false) Optional<String> username, @RequestParam Integer page, @RequestParam Integer size) {
+    public List<User> getAllUser(@RequestParam(required = false) Optional<String> username,
+                                 @RequestParam Integer page,
+                                 @RequestParam Integer size) {
+        log.info("getAllUser: username = {}, page = {}, size = {}", username, page, size);
         return userService.qetAllUser(username, page, size);
     }
 
     @GetMapping ("{id}")
         public User getOneUser(@PathVariable Long id) {
+        log.info("getOneUser: id = {} ", id);
         return userService.getOneUser(id);
     }
 
     @PostMapping
     public User addUser(@RequestBody User user) {
+        log.info("addUser: user = {} ", user);
         return userService.addUser(user);
     }
 
     @PutMapping("{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(user);
+        log.info("updateUser: id = {}, user = {}", id, user);
+        return userService.updateUser(id, user);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id, User user) {
-        userService.deleteUser(user);
+    public void deleteUser(@PathVariable Long id, User user) {
+        log.info("deleteUser: id = {}, user = {}", id, user);
+        userService.deleteUser(id, user);
     }
 
 

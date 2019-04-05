@@ -4,6 +4,7 @@ import com.alexwylsa.Persons.domain.Role;
 import com.alexwylsa.Persons.domain.User;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.UserRepo;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Log4j2
 @Service
 public class UserService {
     @Autowired
@@ -35,17 +37,21 @@ public class UserService {
             userRepo.save(new User(null, "admin", encoder.encode("123"), true, roles));
         }
     }
+
     public List<User> qetAllUser(Optional<String> username, Integer page, Integer size) {
+        log.debug("getAllStaff: username = {}, page = {}, size = {}", username, page, size);
         Pageable pagination = PageRequest.of(page, size);
-        return username.map(r->userRepo.findAllByUsernameContains(r, pagination)).orElseGet(()->userRepo
+        return username.map(u->userRepo.findAllByUsernameContainingIgnoreCase(u, pagination)).orElseGet(()->userRepo
                 .findAll(pagination)).getContent();
     }
 
     public User getOneUser(Long id) {
+        log.debug("getOneUser: id = {} ", id);
         return userRepo.findById(id).orElseThrow(() -> new NotFoundException());
     }
 
     public User addUser(User user) {
+        log.debug("addUser: user = {} ", user);
                 Set<Role> roles = new HashSet<>();
                 roles.add(Role.USER);
 
@@ -56,11 +62,13 @@ public class UserService {
                 return userRepo.save(user);
     }
 
-    public User updateUser(User user) {
+    public User updateUser(Long id, User user) {
+        log.debug("updateUser: id = {}, user = {}", id, user);
         return userRepo.save(user);
     }
 
-    public void deleteUser(User user) {
+    public void deleteUser(Long id, User user) {
+        log.debug("deleteUser: id = {}, user = {}", id, user);
         userRepo.delete(user);
     }
 }
