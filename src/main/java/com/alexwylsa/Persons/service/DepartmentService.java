@@ -25,6 +25,12 @@ public class DepartmentService {
                 .findAll(pagination)).getContent();
     }
 
+    public Long getDepartmentCount(Optional<String> name) {
+        log.debug("getUsersCount: username = {}", name);
+        return name.map(s -> departmentRepo.countByNameContains(s))
+                .orElseGet(() -> departmentRepo.count());
+    }
+
     public Department getDepartment(Long id) {
         log.debug("getDepartment: id = {} ", id);
         return  departmentRepo.findById(id).orElseThrow(() -> new NotFoundException());

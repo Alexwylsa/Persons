@@ -4,7 +4,9 @@ import com.alexwylsa.Persons.domain.Staff;
 import com.alexwylsa.Persons.service.StaffService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +28,12 @@ public class StaffController {
                                    @RequestParam Integer size){
         log.info("getAllStaff: lastName = {}, page = {}, size = {}", lastName, page, size);
         return staffService.getAllStaff(lastName, page, size);
+    }
+
+    @GetMapping("/count")
+    public Long getStaffCount(@RequestParam(required = false) Optional<String> firstName) {
+        log.info("getUsersCount: username = {}", firstName);
+        return staffService.getStaffCount(firstName);
     }
 
     @GetMapping("{id}")
@@ -62,14 +70,16 @@ public class StaffController {
         staffService.addPhoto(id, bytes);
     }
 
-//    @GetMapping("/{id}")
-//    public Staff getPhoto(@PathVariable Long id, @RequestParam MultipartFile file){
-//       return staffService.getPhoto(id, file);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public void deletePhoto(@PathVariable Long id, @RequestParam MultipartFile file){
-//        staffService.deletePhoto(file);
-//    }
+    @GetMapping("/{id}/download")
+    public ResponseEntity<byte[]> getPhoto(@PathVariable Long id){
+       return ResponseEntity.ok()
+               .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + id + ".jpg")
+               .contentType(MediaType.IMAGE_JPEG)
+               .body(staffService.getPhoto(id));
+    }
 
+    @DeleteMapping("/{id}/delete")
+    public void deletePhoto(@PathVariable Long id){
+        staffService.deletePhoto(id);
+    }
 }

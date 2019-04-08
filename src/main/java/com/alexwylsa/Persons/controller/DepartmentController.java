@@ -26,6 +26,12 @@ public class DepartmentController {
        return departmentService.getAllDepartments(name, page, size);
     }
 
+    @GetMapping("/count")
+    public Long getDepartmentCount(@RequestParam(required = false) Optional<String> name) {
+        log.info("getUsersCount: username = {}", name);
+        return departmentService.getDepartmentCount(name);
+    }
+
     @GetMapping ("{id}")
     public Department getDepartment(@PathVariable Long id ) {
         log.info("getDepartment: id = {} ", id);

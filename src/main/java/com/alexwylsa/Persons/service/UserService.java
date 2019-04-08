@@ -4,11 +4,11 @@ import com.alexwylsa.Persons.domain.Role;
 import com.alexwylsa.Persons.domain.User;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.UserRepo;
+import com.alexwylsa.Persons.validators.UserValidator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +25,9 @@ public class UserService {
     private UserRepo userRepo;
 
     @Autowired
+    private UserValidator userValidator;
+
+    @Autowired
     private PasswordEncoder encoder;
     @Value("${upload.path}")
     private String storagePath;
@@ -38,11 +41,19 @@ public class UserService {
         }
     }
 
-    public List<User> qetAllUser(Optional<String> username, Integer page, Integer size) {
-        log.debug("getAllStaff: username = {}, page = {}, size = {}", username, page, size);
-        Pageable pagination = PageRequest.of(page, size);
-        return username.map(u->userRepo.findAllByUsernameContainingIgnoreCase(u, pagination)).orElseGet(()->userRepo
-                .findAll(pagination)).getContent();
+    public List<User> qetAllUser(Optional<String> username, Integer page, Integer size, String byColumn,
+                                 Integer ascending) {
+        log.debug("qetAllUser: username = {}, page = {}, size = {}, byColumn = {}, ascending = {}", username,
+                page, size, byColumn, ascending);
+        PageRequest pagination = userValidator.validatePagingAndThrowAndReturn(page, size, byColumn, ascending);
+        return username.map(u->userRepo.findAllByUsernameContainingIgnoreCase(u, pagination).getContent())
+                .orElseGet(()->userRepo.findAll(pagination).getContent());
+    }
+
+    public Long getUsersCount(Optional<String> username) {
+        log.debug("getUsersCount: username = {}", username);
+        return username.map(s -> userRepo.countByUsernameContains(s))
+                .orElseGet(() -> userRepo.count());
     }
 
     public User getOneUser(Long id) {
@@ -58,7 +69,6 @@ public class UserService {
                 user.setPassword(encoder.encode(user.getPassword()));
                 user.setRoles(roles);
                 user.setActive(true);
-
                 return userRepo.save(user);
     }
 

@@ -20,9 +20,18 @@ public class UserController {
     @GetMapping
     public List<User> getAllUser(@RequestParam(required = false) Optional<String> username,
                                  @RequestParam Integer page,
-                                 @RequestParam Integer size) {
-        log.info("getAllUser: username = {}, page = {}, size = {}", username, page, size);
-        return userService.qetAllUser(username, page, size);
+                                 @RequestParam Integer size,
+                                 @RequestParam(value = "orderBy", required = false) String byColumn,
+                                 @RequestParam Integer ascending) {
+        log.info("getAllUser: username = {}, page = {}, size = {}, byColumn = {}, ascending = {}", username, page,
+                size, byColumn, ascending);
+        return userService.qetAllUser(username, page, size, byColumn, ascending);
+    }
+
+    @GetMapping("/count")
+    public Long getUsersCount(@RequestParam(required = false) Optional<String> username) {
+        log.info("getUsersCount: username = {}", username);
+        return userService.getUsersCount(username);
     }
 
     @GetMapping ("{id}")
@@ -48,7 +57,4 @@ public class UserController {
         log.info("deleteUser: id = {}, user = {}", id, user);
         userService.deleteUser(id, user);
     }
-
-
-
 }

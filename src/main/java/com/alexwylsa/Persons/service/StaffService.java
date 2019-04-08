@@ -1,8 +1,8 @@
 package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Staff;
-
 import com.alexwylsa.Persons.exceptions.FileStorageException;
+import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.StaffRepo;
 import lombok.extern.log4j.Log4j2;
@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -34,6 +33,12 @@ public class StaffService {
         Pageable pagination = PageRequest.of(page, size);
         return lastName.map(s->staffRepo.findAllByLastNameContainingIgnoreCase(s, pagination)).orElseGet(()->staffRepo
                 .findAll(pagination)).getContent();
+    }
+
+    public Long getStaffCount(Optional<String> firstName) {
+        log.debug("getUsersCount: username = {}", firstName);
+        return firstName.map(s -> staffRepo.countByFirstNameContains(s))
+                .orElseGet(() -> staffRepo.count());
     }
 
     public Staff getStaff(Long id) {
@@ -67,12 +72,18 @@ public class StaffService {
         staff.setPhotoFilePath(id.toString());
     }
 
-//
-//    public Staff getPhoto(Long id, MultipartFile file) {
-//        return staffRepo.findById(id).orElseThrow(() -> new NotFoundException());
-//    }
-//
-//    public void deletePhoto(MultipartFile file) {
-//        staffRepo.delete(file);
-//    }
+    public byte[] getPhoto(Long id) {
+        try {
+            return Files.readAllBytes(new File(uploadPath + "/" + id + ".jpg").toPath());
+        }
+        catch (IOException e){throw new MyFileNotFoundException("File not found");
+        }
+    }
+
+    public void deletePhoto(Long id) {
+        try {
+            Files.delete(Paths.get(uploadPath + "/" + id + ".jpg"));
+        }
+        catch (IOException e){throw new MyFileNotFoundException("File not found");}
+    }
 }

@@ -26,11 +26,9 @@ public class EmailController {
                                   @RequestParam Long staffIdTo,
                                   @RequestParam String subject,
                                   @RequestParam String text) {
-
         log.info("getAllDepartments: requester = {}, toUserId = {}, staffIdFrom = {}, toUserId = {}," +
                 " staffIdFrom = {}, staffIdTo = {}, subject = {}, text = {}", requester, toUserId,
                 staffIdFrom, staffIdTo, subject, text);
-
         return emailService.sendSimpleEmail(requester, toUserId, staffIdFrom, staffIdTo, subject, text);
     }
 }

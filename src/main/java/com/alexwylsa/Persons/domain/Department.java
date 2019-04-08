@@ -19,5 +19,4 @@ public class Department {
     private String name;
 
     private Long bossId;
-
 }

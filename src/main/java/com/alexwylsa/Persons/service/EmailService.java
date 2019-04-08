@@ -29,13 +29,11 @@ public class EmailService {
     @Autowired
     ExecutorService executorService;
 
-
     public String sendSimpleEmail(User requester, Long toUserId, Long staffIdFrom,
                                   Long staffIdTo, String subject, String text){
         log.debug("getAllDepartments: requester = {}, toUserId = {}, staffIdFrom = {}, toUserId = {}," +
                         " staffIdFrom = {}, staffIdTo = {}, subject = {}, text = {}", requester, toUserId,
                 staffIdFrom, staffIdTo, subject, text);
-
 
         Staff staffFrom = staffRepo.findById(staffIdFrom).get();
         String staffMailFrom =staffFrom.getMail();
@@ -49,7 +47,6 @@ public class EmailService {
                 .append(" ").append(staffFrom.getLastName()).append("\n")
                 .append(text);
 
-
         // Create a Simple MailMessage.
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -61,14 +58,11 @@ public class EmailService {
         // Send Message!
         try {
             executorService.submit(()->this.emailSender.send(message));
-
-
             return "Email Sent!";
         }
         catch (Exception ex) {
             throw new FileStorageException("Sending failed", ex);
         }
     }
-
     }
 

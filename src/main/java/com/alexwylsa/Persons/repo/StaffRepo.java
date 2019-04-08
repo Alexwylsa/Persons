@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface StaffRepo extends JpaRepository<Staff, Long> {
     Page<Staff> findAllByLastNameContainingIgnoreCase(String lastName, Pageable page);
-List<Staff> findAllByOrderByFirstNameAsc();
+//    List<Staff> findAllByOrderByFirstNameAsc();
+    Long countByFirstNameContains(String firstName);
 }

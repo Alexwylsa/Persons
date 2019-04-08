@@ -10,9 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.concurrent.ExecutorService;
@@ -33,23 +31,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
+                .antMatchers("/photos/**")
+                .permitAll()
+                .and()
+                .authorizeRequests()
                 .antMatchers("/users/**")
                 .hasAuthority(Role.ADMIN.name())
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll();
-
+//        http.authorizeRequests().anyRequest().permitAll();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(8);
     }
-
+//
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
                 .passwordEncoder(encoder);
-
     }
 
     @Bean
