@@ -53,6 +53,8 @@ public class StaffService {
 
     public Staff updateStaff(Long id, Staff staff) {
         log.debug("updateStaff: id = {}, staff = {}", id, staff);
+        staffRepo.findById(id);
+        staff.setId(id);
         return staffRepo.save(staff);
     }
 

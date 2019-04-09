@@ -13,10 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
+import static jdk.nashorn.internal.objects.NativeArray.map;
 
 @Log4j2
 @Service
@@ -73,12 +72,18 @@ public class UserService {
     }
 
     public User updateUser(Long id, User user) {
-        log.debug("updateUser: id = {}, user = {}", id, user);
-        return userRepo.save(user);
+       userRepo.findById(id);
+       user.setId(id);
+       return userRepo.save(user);
     }
 
     public void deleteUser(Long id, User user) {
         log.debug("deleteUser: id = {}, user = {}", id, user);
         userRepo.delete(user);
+    }
+
+    public List<Role> getAllUserRoles() {
+        log.debug("getAllUserRoles: ");
+        return new ArrayList<>(EnumSet.allOf(Role.class));
     }
 }

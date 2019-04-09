@@ -21,7 +21,7 @@ import java.util.Optional;
 public class StaffController {
     @Autowired
     private StaffService staffService;
-
+    //get all staff
     @GetMapping
     public List<Staff> getAllStaff(@RequestParam(required = false) Optional<String> lastName,
                                    @RequestParam Integer page,
@@ -29,37 +29,37 @@ public class StaffController {
         log.info("getAllStaff: lastName = {}, page = {}, size = {}", lastName, page, size);
         return staffService.getAllStaff(lastName, page, size);
     }
-
+    //count staff in DB
     @GetMapping("/count")
     public Long getStaffCount(@RequestParam(required = false) Optional<String> firstName) {
         log.info("getUsersCount: username = {}", firstName);
         return staffService.getStaffCount(firstName);
     }
-
+    //get one staff
     @GetMapping("{id}")
     public Staff getStaff(@PathVariable Long id){
         log.info("getStaff: id = {} ", id);
         return staffService.getStaff(id);
     }
-
+    //add staff
     @PostMapping
     public Staff addStaff(@RequestBody Staff staff){
         log.info("addStaff: staff = {} ", staff);
         return staffService.addStaff(staff);
     }
-
+    //update staff
     @PutMapping("{id}")
     public Staff updateStaff(@PathVariable Long id, @RequestBody Staff staff){
         log.info("updateStaff: id = {}, staff = {}", id, staff);
         return staffService.updateStaff(id, staff);
     }
-
+    //delete staff
     @DeleteMapping("{id}")
     public void deleteStaff(@PathVariable Long id, @RequestBody Staff staff){
         log.info("deleteStaff: id = {}, staff = {}", id, staff);
         staffService.deleteStaff(id, staff);
     }
-
+    //upload photo
     @PostMapping("/{id}")
     public void uploadPhoto(@PathVariable Long id, @RequestParam MultipartFile file) {
         log.info("uploadPhoto: id = {}, file = {}", id, file);
@@ -69,7 +69,7 @@ public class StaffController {
         } catch (IOException ex) { }
         staffService.addPhoto(id, bytes);
     }
-
+    //download photo
     @GetMapping("/{id}/download")
     public ResponseEntity<byte[]> getPhoto(@PathVariable Long id){
        return ResponseEntity.ok()
@@ -77,7 +77,7 @@ public class StaffController {
                .contentType(MediaType.IMAGE_JPEG)
                .body(staffService.getPhoto(id));
     }
-
+    //delete photo
     @DeleteMapping("/{id}/delete")
     public void deletePhoto(@PathVariable Long id){
         staffService.deletePhoto(id);

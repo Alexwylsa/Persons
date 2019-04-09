@@ -17,7 +17,7 @@ public class EmailController {
 
     @Autowired
     EmailService emailService;
-
+    //controller for sending email
     @ResponseBody
     @RequestMapping("/sendSimpleEmail")
     public String sendSimpleEmail(@AuthenticationPrincipal User requester,

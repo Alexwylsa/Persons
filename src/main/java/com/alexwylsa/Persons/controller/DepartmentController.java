@@ -17,7 +17,7 @@ import java.util.Optional;
 public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
-
+    //get all department
     @GetMapping
     public List<Department> getAllDepartments(@RequestParam(required = false) Optional<String> name,
                                               @RequestParam Integer page,
@@ -25,31 +25,31 @@ public class DepartmentController {
        log.info("getAllDepartments: name = {}, page = {}, size = {}", name, page, size);
        return departmentService.getAllDepartments(name, page, size);
     }
-
+    //count department
     @GetMapping("/count")
     public Long getDepartmentCount(@RequestParam(required = false) Optional<String> name) {
         log.info("getUsersCount: username = {}", name);
         return departmentService.getDepartmentCount(name);
     }
-
+    //get one department
     @GetMapping ("{id}")
     public Department getDepartment(@PathVariable Long id ) {
         log.info("getDepartment: id = {} ", id);
         return departmentService.getDepartment(id);
     }
-
+    //add department
     @PostMapping
     public Department addDepartment(@RequestBody Department department){
         log.info("addDepartment: department = {} ", department);
         return  departmentService.addDepartment(department);
     }
-
+    //update department
     @PutMapping("{id}")
     public  Department updateDepartment(@PathVariable Long id, @RequestBody Department department){
         log.info("addDepartment: id = {}, department = {}", id, department);
         return departmentService.updateDepartment(id, department);
     }
-
+    //delete department
     @DeleteMapping("{id}")
     public void deleteDepartment(@PathVariable Long id, Department department){
         log.info("deleteDepartment: id = {}, department = {}", id, department);

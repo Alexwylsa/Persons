@@ -43,6 +43,8 @@ public class DepartmentService {
 
     public Department updateDepartment(Long id, Department department) {
         log.debug("addDepartment: id = {}, department = {}", id, department);
+        departmentRepo.findById(id);
+        department.setId(id);
         return departmentRepo.save(department);
     }
 
