@@ -50,7 +50,7 @@ public class DepartmentServiceTest {
     @Test
     public void getAllDepartmentsTest() throws Exception {
         mockMvc.perform(get("/departments?page=1&size=5&ascending=1")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON).characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").exists())
@@ -59,11 +59,11 @@ public class DepartmentServiceTest {
     //get one department by id test
     @Test
     public void getDepartmentByIdTest() throws Exception{
-        mockMvc.perform(get("/departments/{id}", 1)
-                .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/departments/{id}", 4)
+                .accept(MediaType.APPLICATION_JSON).characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.id").value(4));
     }
     //add new department test
     @Test
@@ -80,11 +80,11 @@ public class DepartmentServiceTest {
     @Test
     public void updateDepartmentTest() throws Exception {
         mockMvc.perform(put("/departments/{id}", 2)
-                .content(asJsonString(new DepartmentInDto("Not", 1L)))
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(new DepartmentInDto("Not", 1L)))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Not Main Department"))
+                .andExpect(jsonPath("$.name").value("Not"))
                 .andExpect(jsonPath("$.bossId").value(1));
     }
     //delete department test

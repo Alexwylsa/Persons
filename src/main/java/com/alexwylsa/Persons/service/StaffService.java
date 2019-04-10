@@ -87,6 +87,7 @@ public class StaffService {
     public void deleteStaff(Long id, Staff staff) {
         log.debug("deleteStaff: id = {}, staff = {}", id, staff);
         staffRepo.delete(staff);
+        deletePhoto(id);
     }
 
     //add new photo

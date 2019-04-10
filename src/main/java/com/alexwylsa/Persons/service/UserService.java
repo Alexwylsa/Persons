@@ -81,7 +81,7 @@ public class UserService {
     //delete user
     public void deleteUser(Long id, User user) {
         log.debug("deleteUser: id = {}, user = {}", id, user);
-        //userValidator.validateDeleteUser(id, user);
+
         userRepo.delete(user);
     }
     //get all user roles

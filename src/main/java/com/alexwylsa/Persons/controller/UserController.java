@@ -38,8 +38,8 @@ public class UserController {
         return userService.getUsersCount(username);
     }
     //get one user
-    @GetMapping ("{id}")
-        public User getOneUser(@PathVariable Long id) {
+    @GetMapping("{id}")
+    public User getOneUser(@PathVariable Long id) {
         log.info("getOneUser: id = {} ", id);
         return userService.getOneUser(id);
     }

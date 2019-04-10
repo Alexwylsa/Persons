@@ -19,8 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = ApplicationTest.class)
@@ -50,7 +49,7 @@ public class StaffServiceTest {
     @Test
     public void getAllStaffTest() throws Exception {
         mockMvc.perform(get("/staff?page=1&size=5&ascending=1")
-                .accept(MediaType.APPLICATION_JSON))
+                .accept(MediaType.APPLICATION_JSON).characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").exists())
@@ -63,11 +62,11 @@ public class StaffServiceTest {
     //get one stuff by id test
     @Test
     public void getStaffByIdTest() throws Exception {
-        mockMvc.perform(get("/staff/{id}", 1)
+        mockMvc.perform(get("/staff/{id}", 11)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(11))
                 .andExpect(jsonPath("$.age").value("21"))
                 .andExpect(jsonPath("$.firstName").value("alex"))
                 .andExpect(jsonPath("$.lastName").value("wylsa"))
@@ -77,40 +76,39 @@ public class StaffServiceTest {
     //add new staff test
     @Test
     public void addStaffTest() throws Exception {
-        mockMvc.perform(post("/staff")
+        mockMvc.perform(post("/staff").contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com",
-                        "male",1L,1L)))
-                .contentType(MediaType.APPLICATION_JSON)
+                        "male",2L,5L)))
+                //.contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.age", Matchers.is("21")))
                 .andExpect(jsonPath("$.firstName", Matchers.is("alex")))
                 .andExpect(jsonPath("$.lastName", Matchers.is("wylsa")))
                 .andExpect(jsonPath("$.mail", Matchers.is("alwy@gmail.com")))
-                .andExpect(jsonPath("$.sex", Matchers.is("male")))
-                .andExpect(jsonPath("$.department_id", Matchers.is(1)))
-                .andExpect(jsonPath("$.user_id", Matchers.is(1)));
+                .andExpect(jsonPath("$.sex", Matchers.is("male")));
+
     }
     //update stuff test
     @Test
     public void updateStaff() throws Exception {
-        mockMvc.perform(put("/staff/{id}", 1)
-                .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com",
-                        "male",1L,1L)))
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/staff/{id}", 9).contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(new StaffInDto("21","xela","rysla","alwy@gmail.com",
+                        "male",2L,5L)))
+                //.contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").value(9))
                 .andExpect(jsonPath("$.age").value("21"))
-                .andExpect(jsonPath("$.firstName").value("alex"))
-                .andExpect(jsonPath("$.lastName").value("wylsa"))
+                .andExpect(jsonPath("$.firstName").value("xela"))
+                .andExpect(jsonPath("$.lastName").value("rysla"))
                 .andExpect(jsonPath("$.mail").value("alwy@gmail.com"))
                 .andExpect(jsonPath("$.sex").value("male"));
     }
     //delete stuff test
     @Test
     public void deleteStaff() throws Exception {
-        mockMvc.perform(delete("/staff/{id}",1))
+        mockMvc.perform(delete("/staff/{id}",9))
                 .andExpect(status().isOk());
     }
 }

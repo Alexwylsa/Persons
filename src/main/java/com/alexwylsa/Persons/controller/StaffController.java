@@ -59,7 +59,7 @@ public class StaffController {
     }
     //delete staff
     @DeleteMapping("{id}")
-    public void deleteStaff(@PathVariable Long id, @RequestBody Staff staff){
+    public void deleteStaff(@PathVariable Long id, Staff staff){
         log.info("deleteStaff: id = {}, staff = {}", id, staff);
         staffService.deleteStaff(id, staff);
     }
