@@ -42,14 +42,14 @@ public class DepartmentController {
         return departmentService.getDepartment(id);
     }
     //add department
-    @PostMapping
+    @PostMapping("/")
     public Department addDepartment(@RequestBody DepartmentInDto department){
         log.info("addDepartment: department = {} ", department);
         return  departmentService.addDepartment(department);
     }
     //update department
     @PutMapping("{id}")
-    public  Department updateDepartment(@PathVariable Long id, @RequestBody Department department){
+    public  Department updateDepartment(@PathVariable Long id, @RequestBody DepartmentInDto department){
         log.info("addDepartment: id = {}, department = {}", id, department);
         return departmentService.updateDepartment(id, department);
     }

@@ -55,7 +55,7 @@ public class DepartmentServiceTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").exists())
-                .andExpect(jsonPath("$.[0].name").isNotEmpty());
+                .andExpect(jsonPath("$.0.name").isNotEmpty());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class DepartmentServiceTest {
 
     @Test
     public void updateDepartmentTest() throws Exception {
-        mockMvc.perform(put("/users/{id}", 1)
+        mockMvc.perform(put("/departments/{id}", 2)
                 .content(asJsonString(new DepartmentInDto("Not Main Department", 2L)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

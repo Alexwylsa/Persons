@@ -72,11 +72,17 @@ public class StaffService {
         return staffRepo.save(staff);
     }
 
-    public Staff updateStaff(Long id, Staff staff) {
-        log.debug("updateStaff: id = {}, staff = {}", id, staff);
-        staffRepo.findById(id);
-        staff.setId(id);
-        return staffRepo.save(staff);
+    public Staff updateStaff(Long id, StaffInDto staffInData) {
+        log.debug("updateStaff: id = {}, staff = {}", id, staffInData);
+        Staff staffFromDb = staffRepo.findById(id).orElseThrow(()->new NotFoundException());
+        staffFromDb.setAge(staffInData.getAge());
+        staffFromDb.setFirstName(staffInData.getFirstName());
+        staffFromDb.setLastName(staffInData.getLastName());
+        staffFromDb.setMail(staffInData.getMail());
+        staffFromDb.setSex(staffInData.getSex());
+        staffFromDb.setDepartment(departmentRepo.findById(staffInData.getDepartment_id()).orElseThrow(()->new NotFoundException()));
+        staffFromDb.setUser(userRepo.findById(staffInData.getUser_id()).orElseThrow(()->new NotFoundException()));
+        return staffRepo.save(staffFromDb);
     }
 
     public void deleteStaff(Long id, Staff staff) {

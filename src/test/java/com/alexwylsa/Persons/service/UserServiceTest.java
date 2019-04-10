@@ -50,7 +50,7 @@ public class UserServiceTest{
     //add user
     @Test
     public void addUserTest() throws Exception {
-        mockMvc.perform(post("/users")
+        mockMvc.perform(post("/users/")
                 .content(asJsonString(new UserInDto("admin", "123")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

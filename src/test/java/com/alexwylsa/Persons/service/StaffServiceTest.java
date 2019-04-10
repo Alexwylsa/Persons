@@ -69,7 +69,7 @@ public class StaffServiceTest {
 
     @Test
     public void addStaffTest() throws Exception {
-        mockMvc.perform(post("/staff")
+        mockMvc.perform(post("/staff/")
                 .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com","male",1L,1L)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))

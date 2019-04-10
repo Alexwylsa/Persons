@@ -53,7 +53,7 @@ public class StaffController {
     }
     //update staff
     @PutMapping("{id}")
-    public Staff updateStaff(@PathVariable Long id, @RequestBody Staff staff){
+    public Staff updateStaff(@PathVariable Long id, @RequestBody StaffInDto staff){
         log.info("updateStaff: id = {}, staff = {}", id, staff);
         return staffService.updateStaff(id, staff);
     }

@@ -72,6 +72,7 @@ public class UserService {
     }
 
     public User updateUser(Long id, UserInDto userInData) {
+        log.debug("addUser: id = {}, userInData = {} ", id, userInData);
        User userFromDb  = userRepo.findById(id).orElseThrow(()->new NotFoundException());
        userFromDb.setUsername(userInData.getUsername());
        userFromDb.setPassword(encoder.encode(userInData.getPassword()));
