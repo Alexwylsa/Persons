@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,6 +62,7 @@ public class StaffService {
     public Staff addStaff(StaffInDto staffInData) {
         log.debug("addStaff: staffInData = {} ", staffInData);
         Staff staff = new Staff();
+        staff.setCreationDate(LocalDateTime.now());
         staff.setAge(staffInData.getAge());
         staff.setFirstName(staffInData.getFirstName());
         staff.setLastName(staffInData.getLastName());
