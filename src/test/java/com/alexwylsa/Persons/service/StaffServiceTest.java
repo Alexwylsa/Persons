@@ -1,7 +1,7 @@
 package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.ApplicationTest;
-import com.alexwylsa.Persons.domain.UserInDto;
+import com.alexwylsa.Persons.domain.StaffInDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -17,7 +17,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = ApplicationTest.class)
 @WebAppConfiguration
 @EnableAutoConfiguration
-public class UserServiceTest{
+public class StaffServiceTest {
 
     private MockMvc mockMvc;
 
@@ -47,54 +49,45 @@ public class UserServiceTest{
                 .build();
     }
 
-    //add user
     @Test
-    public void addUserTest() throws Exception {
-        mockMvc.perform(post("/users")
-                .content(asJsonString(new UserInDto("admin", "123")))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username", Matchers.is("admin")));
-    }
-
-    //update users by id
-    @Test
-    public void updateUsersByIdTest() throws Exception {
-        mockMvc.perform(put("/users/{id}", 1)
-                .content(asJsonString(new UserInDto("user", "123")))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("user"));
-    }
-
-    //get all users
-    @Test
-    public void getAllUsersTest() throws Exception {
-        mockMvc.perform(get("/users?page=1&size=5&ascending=1")
+    public void getAllStaffTest() throws Exception {
+        mockMvc.perform(get("/staff?page=1&size=5&ascending=1")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").exists())
-                .andExpect(jsonPath("$.[0].username").isNotEmpty());
+                .andExpect(jsonPath("$.[0].age").isNotEmpty())
+                .andExpect(jsonPath("$.[0].firstName").isNotEmpty())
+                .andExpect(jsonPath("$.[0].lastName").isNotEmpty())
+                .andExpect(jsonPath("$.[0].mail").isNotEmpty())
+                .andExpect(jsonPath("$.[0].sex").isNotEmpty());
     }
 
-    //get one user by id
     @Test
-    public void getUsersByIdTest() throws Exception {
-        mockMvc.perform(get("/users/{id}", 1)
+    public void getStaff() {
+    }
+
+    @Test
+    public void addStaffTest() throws Exception {
+        mockMvc.perform(post("/staff")
+                .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com","male",1L,1L)))
+                .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1));
+                .andExpect(jsonPath("$.age", Matchers.is("21")))
+                .andExpect(jsonPath("$.firstName", Matchers.is("alex")))
+                .andExpect(jsonPath("$.lastName", Matchers.is("wylsa")))
+                .andExpect(jsonPath("$.mail", Matchers.is("alwy@gmail.com")))
+                .andExpect(jsonPath("$.sex", Matchers.is("male")))
+                .andExpect(jsonPath("$.department_id", Matchers.is(1)))
+                .andExpect(jsonPath("$.user_id", Matchers.is(1)));
     }
 
-    //delete user by id
     @Test
-    public void deleteUserTest() throws Exception {
-        mockMvc.perform(delete("/users/{id}",1))
-                .andExpect(status().isOk());
+    public void updateStaff() {
+    }
+
+    @Test
+    public void deleteStaff() {
     }
 }
-

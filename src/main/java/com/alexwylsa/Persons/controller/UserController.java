@@ -2,6 +2,7 @@ package com.alexwylsa.Persons.controller;
 
 import com.alexwylsa.Persons.domain.Role;
 import com.alexwylsa.Persons.domain.User;
+import com.alexwylsa.Persons.domain.UserInDto;
 import com.alexwylsa.Persons.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,11 @@ import java.util.Optional;
 @Log4j2
 @RestController
 @RequestMapping("/users")
-
 public class UserController {
+
     @Autowired
     private UserService userService;
+
     //get all users
     @GetMapping
     public List<User> getAllUser(@RequestParam(required = false) Optional<String> username,
@@ -42,14 +44,14 @@ public class UserController {
         return userService.getOneUser(id);
     }
     //add new user
-    @PostMapping("/")
-    public User addUser(@RequestBody User user) {
+    @PostMapping()
+    public User addUser(@RequestBody UserInDto user) {
         log.info("addUser: user = {} ", user);
         return userService.addUser(user);
     }
     //update user info
     @PutMapping("{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+    public User updateUser(@PathVariable Long id, @RequestBody UserInDto user) {
         log.info("updateUser: id = {}, user = {}", id, user);
         return userService.updateUser(id, user);
     }

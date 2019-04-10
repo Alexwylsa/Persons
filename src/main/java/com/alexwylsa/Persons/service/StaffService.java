@@ -1,15 +1,19 @@
 package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Staff;
+import com.alexwylsa.Persons.domain.StaffInDto;
 import com.alexwylsa.Persons.exceptions.FileStorageException;
 import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
+import com.alexwylsa.Persons.repo.DepartmentRepo;
 import com.alexwylsa.Persons.repo.StaffRepo;
+import com.alexwylsa.Persons.repo.UserRepo;
+import com.alexwylsa.Persons.validators.StaffValidator;
+import com.alexwylsa.Persons.validators.UserValidator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -25,14 +29,23 @@ public class StaffService {
     @Autowired
     private StaffRepo staffRepo;
 
+    @Autowired
+    private UserValidator userValidator;
+
     @Value("${upload.path}")
     private String uploadPath;
+    @Autowired
+    private DepartmentRepo departmentRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-    public List<Staff> getAllStaff(Optional<String> lastName, Integer page, Integer size) {
-        log.debug("getAllStaff: name = {}, page = {}, size = {}", lastName, page, size);
-        Pageable pagination = PageRequest.of(page, size);
-        return lastName.map(s->staffRepo.findAllByLastNameContainingIgnoreCase(s, pagination)).orElseGet(()->staffRepo
-                .findAll(pagination)).getContent();
+    public List<Staff> getAllStaff(Optional<String> lastName, Integer page, Integer size, String byColumn,
+                                   Integer ascending) {
+        log.debug("getAllStaff: name = {}, page = {}, size = {}, byColumn = {}, ascending = {}", lastName,
+                page, size, byColumn, ascending);
+        PageRequest pagination = userValidator.validatePagingAndThrowAndReturn(page, size, byColumn, ascending);
+        return lastName.map(u->staffRepo.findAllByLastNameContainingIgnoreCase(u, pagination).getContent())
+                .orElseGet(()->staffRepo.findAll(pagination).getContent());
     }
 
     public Long getStaffCount(Optional<String> firstName) {
@@ -46,8 +59,16 @@ public class StaffService {
         return staffRepo.findById(id).orElseThrow(() -> new NotFoundException());
     }
 
-    public Staff addStaff(Staff staff) {
-        log.debug("addStaff: staff = {} ", staff);
+    public Staff addStaff(StaffInDto staffInData) {
+        log.debug("addStaff: staffInData = {} ", staffInData);
+        Staff staff = new Staff();
+        staff.setAge(staffInData.getAge());
+        staff.setFirstName(staffInData.getFirstName());
+        staff.setLastName(staffInData.getLastName());
+        staff.setMail(staffInData.getMail());
+        staff.setSex(staffInData.getSex());
+        staff.setDepartment(departmentRepo.findById(staffInData.getDepartment_id()).orElseThrow(()->new NotFoundException()));
+        staff.setUser(userRepo.findById(staffInData.getUser_id()).orElseThrow(()->new NotFoundException()));
         return staffRepo.save(staff);
     }
 

@@ -1,6 +1,7 @@
 package com.alexwylsa.Persons.controller;
 
 import com.alexwylsa.Persons.domain.Department;
+import com.alexwylsa.Persons.domain.DepartmentInDto;
 import com.alexwylsa.Persons.service.DepartmentService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @Log4j2
 @RestController
 @RequestMapping("/departments")
-@PreAuthorize("hasAuthority('ADMIN')")
+//@PreAuthorize("hasAuthority('ADMIN')")
 public class DepartmentController {
     @Autowired
     private DepartmentService departmentService;
@@ -21,9 +22,12 @@ public class DepartmentController {
     @GetMapping
     public List<Department> getAllDepartments(@RequestParam(required = false) Optional<String> name,
                                               @RequestParam Integer page,
-                                              @RequestParam Integer size){
-       log.info("getAllDepartments: name = {}, page = {}, size = {}", name, page, size);
-       return departmentService.getAllDepartments(name, page, size);
+                                              @RequestParam Integer size,
+                                              @RequestParam(value = "orderBy", required = false) String byColumn,
+                                              @RequestParam Integer ascending){
+       log.info("getAllDepartments: name = {}, page = {}, size = {}, byColumn = {}, ascending = {}", name, page,
+               size, byColumn, ascending);
+       return departmentService.getAllDepartments(name, page, size, byColumn, ascending);
     }
     //count department
     @GetMapping("/count")
@@ -39,7 +43,7 @@ public class DepartmentController {
     }
     //add department
     @PostMapping
-    public Department addDepartment(@RequestBody Department department){
+    public Department addDepartment(@RequestBody DepartmentInDto department){
         log.info("addDepartment: department = {} ", department);
         return  departmentService.addDepartment(department);
     }

@@ -1,6 +1,8 @@
 package com.alexwylsa.Persons.validators;
 
 import com.alexwylsa.Persons.domain.User;
+import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
+import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.UserRepo;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class UserValidator {
 
     public PageRequest validatePagingAndThrowAndReturn(Integer page, Integer size, String byColumn, Integer ascending) {
         if (Objects.isNull(byColumn) || byColumn.isEmpty()) {
-            byColumn = "username";
+            byColumn = "id";
         }
         if (Objects.isNull(ascending)) {
             ascending = 1;
@@ -48,4 +50,15 @@ public class UserValidator {
             return Sort.Direction.DESC;
         }
     }
+
+//    public void validateDeleteUser(Long id, User user) {
+//        if (Objects.isNull(id)) {
+//            throw new MyFileNotFoundException("Wrong id");
+//        }
+//        if (user.getId().equals(id)) {
+//            throw new MyFileNotFoundException("User can't delete himself");
+//        }
+//        userRepo.findById(id).orElseThrow(() -> new MyFileNotFoundException("User not exist"));
+//    }
+
 }

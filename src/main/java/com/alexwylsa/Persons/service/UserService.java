@@ -2,6 +2,7 @@ package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Role;
 import com.alexwylsa.Persons.domain.User;
+import com.alexwylsa.Persons.domain.UserInDto;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.UserRepo;
 import com.alexwylsa.Persons.validators.UserValidator;
@@ -14,8 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-
-import static jdk.nashorn.internal.objects.NativeArray.map;
 
 @Log4j2
 @Service
@@ -60,25 +59,28 @@ public class UserService {
         return userRepo.findById(id).orElseThrow(() -> new NotFoundException());
     }
 
-    public User addUser(User user) {
-        log.debug("addUser: user = {} ", user);
-                Set<Role> roles = new HashSet<>();
-                roles.add(Role.USER);
-
-                user.setPassword(encoder.encode(user.getPassword()));
-                user.setRoles(roles);
-                user.setActive(true);
-                return userRepo.save(user);
+    public User addUser(UserInDto userInData) {
+        log.debug("addUser: userInData = {} ", userInData);
+        User user = new User();
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.USER);
+        user.setPassword(encoder.encode(userInData.getPassword()));
+        user.setUsername(userInData.getUsername());
+        user.setRoles(roles);
+        user.setActive(true);
+        return userRepo.save(user);
     }
 
-    public User updateUser(Long id, User user) {
-       userRepo.findById(id);
-       user.setId(id);
-       return userRepo.save(user);
+    public User updateUser(Long id, UserInDto userInData) {
+       User userFromDb  = userRepo.findById(id).orElseThrow(()->new NotFoundException());
+       userFromDb.setUsername(userInData.getUsername());
+       userFromDb.setPassword(encoder.encode(userInData.getPassword()));
+       return userRepo.save(userFromDb);
     }
 
     public void deleteUser(Long id, User user) {
         log.debug("deleteUser: id = {}, user = {}", id, user);
+        //userValidator.validateDeleteUser(id, user);
         userRepo.delete(user);
     }
 

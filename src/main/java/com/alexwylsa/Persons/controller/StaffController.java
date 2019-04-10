@@ -1,6 +1,7 @@
 package com.alexwylsa.Persons.controller;
 
 import com.alexwylsa.Persons.domain.Staff;
+import com.alexwylsa.Persons.domain.StaffInDto;
 import com.alexwylsa.Persons.service.StaffService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,12 @@ public class StaffController {
     @GetMapping
     public List<Staff> getAllStaff(@RequestParam(required = false) Optional<String> lastName,
                                    @RequestParam Integer page,
-                                   @RequestParam Integer size){
-        log.info("getAllStaff: lastName = {}, page = {}, size = {}", lastName, page, size);
-        return staffService.getAllStaff(lastName, page, size);
+                                   @RequestParam Integer size,
+                                   @RequestParam(value = "orderBy", required = false) String byColumn,
+                                   @RequestParam Integer ascending){
+        log.info("getAllStaff: lastName = {}, page = {}, size = {}, byColumn = {}, ascending = {}", lastName,
+                page, size, byColumn, ascending);
+        return staffService.getAllStaff(lastName, page, size, byColumn, ascending);
     }
     //count staff in DB
     @GetMapping("/count")
@@ -41,9 +45,9 @@ public class StaffController {
         log.info("getStaff: id = {} ", id);
         return staffService.getStaff(id);
     }
-    //add staff
-    @PostMapping
-    public Staff addStaff(@RequestBody Staff staff){
+    //add new staff
+    @PostMapping("/")
+    public Staff addStaff(@RequestBody StaffInDto staff){
         log.info("addStaff: staff = {} ", staff);
         return staffService.addStaff(staff);
     }

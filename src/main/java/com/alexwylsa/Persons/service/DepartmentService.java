@@ -1,12 +1,14 @@
 package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Department;
+import com.alexwylsa.Persons.domain.DepartmentInDto;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.DepartmentRepo;
+import com.alexwylsa.Persons.validators.DepartmentValidator;
+import com.alexwylsa.Persons.validators.UserValidator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,12 +19,17 @@ import java.util.Optional;
 public class DepartmentService {
     @Autowired
     private DepartmentRepo departmentRepo;
+    @Autowired
+    private UserValidator userValidator;
 
-    public List<Department> getAllDepartments(Optional<String> name, Integer page, Integer size) {
-        log.debug("getAllDepartments: name = {}, page = {}, size = {}", name, page, size);
-        Pageable pagination = PageRequest.of(page, size);
-        return name.map(d->departmentRepo.findAllByNameContainingIgnoreCase(d, pagination)).orElseGet(()->departmentRepo
-                .findAll(pagination)).getContent();
+    public List<Department> getAllDepartments(Optional<String> name, Integer page, Integer size, String byColumn,
+                                              Integer ascending) {
+        log.debug("getAllDepartments: name = {}, page = {}, size = {}, byColumn = {}, ascending = {}", name,
+                page, size, byColumn, ascending);
+        PageRequest pagination = userValidator.validatePagingAndThrowAndReturn(page, size,
+                byColumn, ascending);
+        return name.map(u->departmentRepo.findAllByNameContainingIgnoreCase(u, pagination).getContent())
+                .orElseGet(()->departmentRepo.findAll(pagination).getContent());
     }
 
     public Long getDepartmentCount(Optional<String> name) {
@@ -36,8 +43,11 @@ public class DepartmentService {
         return  departmentRepo.findById(id).orElseThrow(() -> new NotFoundException());
     }
 
-    public Department addDepartment(Department department) {
-        log.debug("getDepartment: department = {} ", department);
+    public Department addDepartment(DepartmentInDto departmentInData) {
+        log.debug("getDepartment: departmentInData = {} ", departmentInData);
+        Department department = new Department();
+        department.setName(departmentInData.getName());
+        department.setBossId(departmentInData.getBossId());
         return departmentRepo.save(department);
     }
 
