@@ -44,7 +44,7 @@ public class UserController {
         return userService.getOneUser(id);
     }
     //add new user
-    @PostMapping("/")
+    @PostMapping
     public User addUser(@RequestBody UserInDto user) {
         log.info("addUser: user = {} ", user);
         return userService.addUser(user);

@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -33,7 +32,7 @@ public class DepartmentServiceTest {
 
     @Autowired
     WebApplicationContext webApplicationContext;
-
+    //convert to string
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
@@ -47,7 +46,7 @@ public class DepartmentServiceTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
     }
-
+    //get all department with parameters test
     @Test
     public void getAllDepartmentsTest() throws Exception {
         mockMvc.perform(get("/departments?page=1&size=5&ascending=1")
@@ -55,9 +54,9 @@ public class DepartmentServiceTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").exists())
-                .andExpect(jsonPath("$.0.name").isNotEmpty());
+                .andExpect(jsonPath("$.[0].name").isNotEmpty());
     }
-
+    //get one department by id test
     @Test
     public void getDepartmentByIdTest() throws Exception{
         mockMvc.perform(get("/departments/{id}", 1)
@@ -66,7 +65,7 @@ public class DepartmentServiceTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }
-
+    //add new department test
     @Test
     public void addDepartmentTest() throws Exception {
         mockMvc.perform(post("/departments")
@@ -77,18 +76,18 @@ public class DepartmentServiceTest {
                 .andExpect(jsonPath("$.name", Matchers.is("Main Department")))
                 .andExpect(jsonPath("$.bossId", Matchers.is(1)));
     }
-
+    //update department test
     @Test
     public void updateDepartmentTest() throws Exception {
         mockMvc.perform(put("/departments/{id}", 2)
-                .content(asJsonString(new DepartmentInDto("Not Main Department", 2L)))
+                .content(asJsonString(new DepartmentInDto("Not", 1L)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Not Main Department"))
-                .andExpect(jsonPath("$.bossId").value(2));
+                .andExpect(jsonPath("$.bossId").value(1));
     }
-
+    //delete department test
     @Test
     public void deleteDepartmentTest() throws Exception {
         mockMvc.perform(delete("/departments/{id}",1))

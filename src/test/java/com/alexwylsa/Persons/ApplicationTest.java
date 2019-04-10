@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
+//connection to test database
 @Configuration
 @ComponentScan(basePackages = "com.alexwylsa.Persons")
 @EnableJpaRepositories(basePackages = "com.alexwylsa.Persons.repo")

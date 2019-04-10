@@ -8,8 +8,7 @@ import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.DepartmentRepo;
 import com.alexwylsa.Persons.repo.StaffRepo;
 import com.alexwylsa.Persons.repo.UserRepo;
-import com.alexwylsa.Persons.validators.StaffValidator;
-import com.alexwylsa.Persons.validators.UserValidator;
+import com.alexwylsa.Persons.parameters.SortParameters;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +29,7 @@ public class StaffService {
     private StaffRepo staffRepo;
 
     @Autowired
-    private UserValidator userValidator;
+    private SortParameters sortParameters;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -38,27 +37,27 @@ public class StaffService {
     private DepartmentRepo departmentRepo;
     @Autowired
     private UserRepo userRepo;
-
+    //get all departments with parameters
     public List<Staff> getAllStaff(Optional<String> lastName, Integer page, Integer size, String byColumn,
                                    Integer ascending) {
         log.debug("getAllStaff: name = {}, page = {}, size = {}, byColumn = {}, ascending = {}", lastName,
                 page, size, byColumn, ascending);
-        PageRequest pagination = userValidator.validatePagingAndThrowAndReturn(page, size, byColumn, ascending);
+        PageRequest pagination = sortParameters.parameters(page, size, byColumn, ascending);
         return lastName.map(u->staffRepo.findAllByLastNameContainingIgnoreCase(u, pagination).getContent())
                 .orElseGet(()->staffRepo.findAll(pagination).getContent());
     }
-
+    //count staff
     public Long getStaffCount(Optional<String> firstName) {
         log.debug("getUsersCount: username = {}", firstName);
         return firstName.map(s -> staffRepo.countByFirstNameContains(s))
                 .orElseGet(() -> staffRepo.count());
     }
-
+    //get one staff
     public Staff getStaff(Long id) {
         log.debug("getStaff: id = {} ", id);
         return staffRepo.findById(id).orElseThrow(() -> new NotFoundException());
     }
-
+    //add new staff
     public Staff addStaff(StaffInDto staffInData) {
         log.debug("addStaff: staffInData = {} ", staffInData);
         Staff staff = new Staff();
@@ -71,7 +70,7 @@ public class StaffService {
         staff.setUser(userRepo.findById(staffInData.getUser_id()).orElseThrow(()->new NotFoundException()));
         return staffRepo.save(staff);
     }
-
+    //update staff
     public Staff updateStaff(Long id, StaffInDto staffInData) {
         log.debug("updateStaff: id = {}, staff = {}", id, staffInData);
         Staff staffFromDb = staffRepo.findById(id).orElseThrow(()->new NotFoundException());
@@ -84,13 +83,13 @@ public class StaffService {
         staffFromDb.setUser(userRepo.findById(staffInData.getUser_id()).orElseThrow(()->new NotFoundException()));
         return staffRepo.save(staffFromDb);
     }
-
+    //delete staff
     public void deleteStaff(Long id, Staff staff) {
         log.debug("deleteStaff: id = {}, staff = {}", id, staff);
         staffRepo.delete(staff);
     }
 
-
+    //add new photo
     public void addPhoto(Long id, byte[] file) {
         log.debug("deleteStaff: id = {}, file = {}", id, file);
         try {
@@ -100,7 +99,7 @@ public class StaffService {
         Staff staff = staffRepo.findById(id).orElseThrow(NotFoundException::new);
         staff.setPhotoFilePath(id.toString());
     }
-
+    //get photo
     public byte[] getPhoto(Long id) {
         try {
             return Files.readAllBytes(new File(uploadPath + "/" + id + ".jpg").toPath());
@@ -108,7 +107,7 @@ public class StaffService {
         catch (IOException e){throw new MyFileNotFoundException("File not found");
         }
     }
-
+    //delete photo
     public void deletePhoto(Long id) {
         try {
             Files.delete(Paths.get(uploadPath + "/" + id + ".jpg"));

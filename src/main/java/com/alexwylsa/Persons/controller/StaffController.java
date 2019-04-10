@@ -46,7 +46,7 @@ public class StaffController {
         return staffService.getStaff(id);
     }
     //add new staff
-    @PostMapping("/")
+    @PostMapping
     public Staff addStaff(@RequestBody StaffInDto staff){
         log.info("addStaff: staff = {} ", staff);
         return staffService.addStaff(staff);

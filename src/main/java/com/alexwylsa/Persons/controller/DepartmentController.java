@@ -42,7 +42,7 @@ public class DepartmentController {
         return departmentService.getDepartment(id);
     }
     //add department
-    @PostMapping("/")
+    @PostMapping
     public Department addDepartment(@RequestBody DepartmentInDto department){
         log.info("addDepartment: department = {} ", department);
         return  departmentService.addDepartment(department);

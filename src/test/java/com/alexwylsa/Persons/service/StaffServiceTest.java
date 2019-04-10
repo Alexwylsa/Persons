@@ -17,9 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,7 +32,7 @@ public class StaffServiceTest {
 
     @Autowired
     WebApplicationContext webApplicationContext;
-
+    //convert to string
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
@@ -48,7 +46,7 @@ public class StaffServiceTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
     }
-
+    //get all staff test with parameters
     @Test
     public void getAllStaffTest() throws Exception {
         mockMvc.perform(get("/staff?page=1&size=5&ascending=1")
@@ -62,15 +60,26 @@ public class StaffServiceTest {
                 .andExpect(jsonPath("$.[0].mail").isNotEmpty())
                 .andExpect(jsonPath("$.[0].sex").isNotEmpty());
     }
-
+    //get one stuff by id test
     @Test
-    public void getStaff() {
+    public void getStaffByIdTest() throws Exception {
+        mockMvc.perform(get("/staff/{id}", 1)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.age").value("21"))
+                .andExpect(jsonPath("$.firstName").value("alex"))
+                .andExpect(jsonPath("$.lastName").value("wylsa"))
+                .andExpect(jsonPath("$.mail").value("alwy@gmail.com"))
+                .andExpect(jsonPath("$.sex").value("male"));
     }
-
+    //add new staff test
     @Test
     public void addStaffTest() throws Exception {
-        mockMvc.perform(post("/staff/")
-                .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com","male",1L,1L)))
+        mockMvc.perform(post("/staff")
+                .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com",
+                        "male",1L,1L)))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -82,12 +91,26 @@ public class StaffServiceTest {
                 .andExpect(jsonPath("$.department_id", Matchers.is(1)))
                 .andExpect(jsonPath("$.user_id", Matchers.is(1)));
     }
-
+    //update stuff test
     @Test
-    public void updateStaff() {
+    public void updateStaff() throws Exception {
+        mockMvc.perform(put("/staff/{id}", 1)
+                .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com",
+                        "male",1L,1L)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.age").value("21"))
+                .andExpect(jsonPath("$.firstName").value("alex"))
+                .andExpect(jsonPath("$.lastName").value("wylsa"))
+                .andExpect(jsonPath("$.mail").value("alwy@gmail.com"))
+                .andExpect(jsonPath("$.sex").value("male"));
     }
-
+    //delete stuff test
     @Test
-    public void deleteStaff() {
+    public void deleteStaff() throws Exception {
+        mockMvc.perform(delete("/staff/{id}",1))
+                .andExpect(status().isOk());
     }
 }

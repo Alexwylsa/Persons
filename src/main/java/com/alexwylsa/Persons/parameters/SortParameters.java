@@ -1,6 +1,6 @@
-package com.alexwylsa.Persons.validators;
+package com.alexwylsa.Persons.parameters;
 
-import com.alexwylsa.Persons.repo.StaffRepo;
+import com.alexwylsa.Persons.repo.UserRepo;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -11,14 +11,13 @@ import java.util.Objects;
 
 @Log4j2
 @Service
-public class StaffValidator {
-
+public class SortParameters {
     @Autowired
-    StaffRepo staffRepo;
-
-    public PageRequest validatePagingAndThrowAndReturnStaff(Integer page, Integer size, String byColumn, Integer ascending) {
+    private UserRepo userRepo;
+    //parameters for sort and search
+    public PageRequest parameters(Integer page, Integer size, String byColumn, Integer ascending) {
         if (Objects.isNull(byColumn) || byColumn.isEmpty()) {
-            byColumn = "lastName";
+            byColumn = "id";
         }
         if (Objects.isNull(ascending)) {
             ascending = 1;
@@ -30,7 +29,7 @@ public class StaffValidator {
         }
         return PageRequest.of(page, size, new Sort(dir, byColumn));
     }
-
+    //count ascending or count descending
     private Sort.Direction parseDirection(Integer ascending) {
         if (ascending.equals(1)) {
             return Sort.Direction.ASC;
@@ -38,4 +37,15 @@ public class StaffValidator {
             return Sort.Direction.DESC;
         }
     }
+
+//    public void validateDeleteUser(Long id, User user) {
+//        if (Objects.isNull(id)) {
+//            throw new MyFileNotFoundException("Wrong id");
+//        }
+//        if (user.getId().equals(id)) {
+//            throw new MyFileNotFoundException("User can't delete himself");
+//        }
+//        userRepo.findById(id).orElseThrow(() -> new MyFileNotFoundException("User not exist"));
+//    }
+
 }

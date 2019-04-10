@@ -3,7 +3,7 @@ package com.alexwylsa.Persons.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+//staff DTO
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

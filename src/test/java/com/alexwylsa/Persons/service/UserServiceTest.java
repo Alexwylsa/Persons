@@ -32,7 +32,7 @@ public class UserServiceTest{
 
     @Autowired
     WebApplicationContext webApplicationContext;
-
+    //convert to string
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);
@@ -50,7 +50,7 @@ public class UserServiceTest{
     //add user
     @Test
     public void addUserTest() throws Exception {
-        mockMvc.perform(post("/users/")
+        mockMvc.perform(post("/users")
                 .content(asJsonString(new UserInDto("admin", "123")))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -69,7 +69,7 @@ public class UserServiceTest{
                 .andExpect(jsonPath("$.username").value("user"));
     }
 
-    //get all users
+    //get all users with parameters
     @Test
     public void getAllUsersTest() throws Exception {
         mockMvc.perform(get("/users?page=1&size=5&ascending=1")

@@ -12,20 +12,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.ExecutorService;
-
+//sending email service
 @Log4j2
 @Service
 public class EmailService {
-
     @Autowired
     private JavaMailSender emailSender;
-
     @Autowired
     private StaffRepo staffRepo;
-
     @Autowired
     UserRepo userRepo;
-
     @Autowired
     ExecutorService executorService;
 
@@ -49,12 +45,10 @@ public class EmailService {
 
         // Create a Simple MailMessage.
         SimpleMailMessage message = new SimpleMailMessage();
-
         message.setFrom(staffMailFrom);
         message.setTo(staffMailTo);
         message.setSubject(subject);
         message.setText(sb.toString());
-
         // Send Message!
         try {
             executorService.submit(()->this.emailSender.send(message));
