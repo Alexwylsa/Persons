@@ -2,6 +2,8 @@ package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Department;
 import com.alexwylsa.Persons.domain.DepartmentInDto;
+import com.alexwylsa.Persons.exceptions.AlreadyExistsException;
+import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.DepartmentRepo;
 import com.alexwylsa.Persons.parameters.SortParameters;
@@ -44,6 +46,9 @@ public class DepartmentService {
     //add new department
     public Department addDepartment(DepartmentInDto departmentInData) {
         log.debug("getDepartment: departmentInData = {} ", departmentInData);
+        if (departmentRepo.existsByName(departmentInData.getName())) {
+            throw new AlreadyExistsException("Department already exist. Please choose another department name");
+        }
         Department department = new Department();
         department.setName(departmentInData.getName());
         department.setBossId(departmentInData.getBossId());

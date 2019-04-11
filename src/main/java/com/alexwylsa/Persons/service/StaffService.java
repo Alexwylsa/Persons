@@ -97,10 +97,11 @@ public class StaffService {
         log.debug("deleteStaff: id = {}, file = {}", id, file);
         try {
             Files.write(Paths.get(uploadPath + "/" + id + ".jpg"), file);
+            Staff staff = staffRepo.findById(id).orElseThrow(NotFoundException::new);
+            staff.setPhotoFilePath(id.toString());
+
         } catch (IOException ex) {throw new FileStorageException("Sending failed", ex);}
 
-        Staff staff = staffRepo.findById(id).orElseThrow(NotFoundException::new);
-        staff.setPhotoFilePath(id.toString());
     }
     //get photo
     public byte[] getPhoto(Long id) {

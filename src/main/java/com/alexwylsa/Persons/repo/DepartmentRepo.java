@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface DepartmentRepo extends JpaRepository<Department, Long> {
     Page<Department> findAllByNameContainingIgnoreCase(String name, Pageable page);
     Long countByNameContains(String firstName);
+    boolean existsByName(String name);
 }

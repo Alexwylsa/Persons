@@ -3,6 +3,9 @@ package com.alexwylsa.Persons.service;
 import com.alexwylsa.Persons.domain.Role;
 import com.alexwylsa.Persons.domain.User;
 import com.alexwylsa.Persons.domain.UserInDto;
+import com.alexwylsa.Persons.exceptions.AlreadyExistsException;
+import com.alexwylsa.Persons.exceptions.FileStorageException;
+import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
 import com.alexwylsa.Persons.exceptions.NotFoundException;
 import com.alexwylsa.Persons.repo.UserRepo;
 import com.alexwylsa.Persons.parameters.SortParameters;
@@ -61,6 +64,9 @@ public class UserService {
     //add new user
     public User addUser(UserInDto userInData) {
         log.debug("addUser: userInData = {} ", userInData);
+        if (userRepo.existsByUsername(userInData.getUsername())) {
+            throw new AlreadyExistsException("User already exist. Please choose another username");
+        }
         User user = new User();
         Set<Role> roles = new HashSet<>();
         roles.add(Role.USER);
