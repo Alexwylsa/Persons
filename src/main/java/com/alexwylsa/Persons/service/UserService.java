@@ -87,8 +87,8 @@ public class UserService {
     //delete user
     public void deleteUser(Long id, User user) {
         log.debug("deleteUser: id = {}, user = {}", id, user);
-
-        userRepo.delete(user);
+        sortParameters.deleteUserСheck(id, user);
+        userRepo.deleteById(id);
     }
     //get all user roles
     public List<Role> getAllUserRoles() {

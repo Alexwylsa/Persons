@@ -62,11 +62,11 @@ public class StaffServiceTest {
     //get one stuff by id test
     @Test
     public void getStaffByIdTest() throws Exception {
-        mockMvc.perform(get("/staff/{id}", 11)
+        mockMvc.perform(get("/staff/{id}", 9)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(11))
+                .andExpect(jsonPath("$.id").value(9))
                 .andExpect(jsonPath("$.age").value("21"))
                 .andExpect(jsonPath("$.firstName").value("alex"))
                 .andExpect(jsonPath("$.lastName").value("wylsa"))
@@ -78,7 +78,7 @@ public class StaffServiceTest {
     public void addStaffTest() throws Exception {
         mockMvc.perform(post("/staff").contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new StaffInDto("21","alex","wylsa","alwy@gmail.com",
-                        "male",2L,5L)))
+                        "male",3L,6L)))
                 //.contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -94,7 +94,7 @@ public class StaffServiceTest {
     public void updateStaff() throws Exception {
         mockMvc.perform(put("/staff/{id}", 9).contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(new StaffInDto("21","xela","rysla","alwy@gmail.com",
-                        "male",2L,5L)))
+                        "male",3L,6L)))
                 //.contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -28,10 +28,8 @@ import java.util.Optional;
 public class StaffService {
     @Autowired
     private StaffRepo staffRepo;
-
     @Autowired
     private SortParameters sortParameters;
-
     @Value("${upload.path}")
     private String uploadPath;
     @Autowired
@@ -88,20 +86,20 @@ public class StaffService {
     //delete staff
     public void deleteStaff(Long id, Staff staff) {
         log.debug("deleteStaff: id = {}, staff = {}", id, staff);
+        try {Files.delete(Paths.get(uploadPath + "/" + id + ".jpg"));}
+        catch (IOException e){throw new MyFileNotFoundException("File not found");}
         staffRepo.delete(staff);
-        deletePhoto(id);
     }
-
     //add new photo
     public void addPhoto(Long id, byte[] file) {
         log.debug("deleteStaff: id = {}, file = {}", id, file);
         try {
             Files.write(Paths.get(uploadPath + "/" + id + ".jpg"), file);
-            Staff staff = staffRepo.findById(id).orElseThrow(NotFoundException::new);
-            staff.setPhotoFilePath(id.toString());
-
-        } catch (IOException ex) {throw new FileStorageException("Sending failed", ex);}
-
+            Staff staffFromDb = staffRepo.findById(id).orElseThrow(NotFoundException::new);
+            staffFromDb.setPhotoFilePath(id.toString());
+            staffRepo.save(staffFromDb);
+        }
+        catch (IOException ex) {throw new FileStorageException("Sending failed", ex);}
     }
     //get photo
     public byte[] getPhoto(Long id) {
@@ -115,6 +113,9 @@ public class StaffService {
     public void deletePhoto(Long id) {
         try {
             Files.delete(Paths.get(uploadPath + "/" + id + ".jpg"));
+            Staff staffFromDb = staffRepo.findById(id).orElseThrow(NotFoundException::new);
+            staffFromDb.setPhotoFilePath("");
+            staffRepo.save(staffFromDb);
         }
         catch (IOException e){throw new MyFileNotFoundException("File not found");}
     }

@@ -51,22 +51,22 @@ public class UserServiceTest{
     @Test
     public void addUserTest() throws Exception {
         mockMvc.perform(post("/users")
-                .content(asJsonString(new UserInDto("admin", "123")))
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(new UserInDto("user", "123")))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username", Matchers.is("admin")));
+                .andExpect(jsonPath("$.username", Matchers.is("user")));
     }
 
     //update users by id
     @Test
     public void updateUsersByIdTest() throws Exception {
-        mockMvc.perform(put("/users/{id}", 1)
-                .content(asJsonString(new UserInDto("user", "123")))
+        mockMvc.perform(put("/users/{id}", 6)
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(new UserInDto("user1", "123")))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("user"));
+                .andExpect(jsonPath("$.username").value("user1"));
     }
 
     //get all users with parameters

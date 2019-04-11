@@ -59,33 +59,33 @@ public class DepartmentServiceTest {
     //get one department by id test
     @Test
     public void getDepartmentByIdTest() throws Exception{
-        mockMvc.perform(get("/departments/{id}", 4)
+        mockMvc.perform(get("/departments/{id}", 3)
                 .accept(MediaType.APPLICATION_JSON).characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(4));
+                .andExpect(jsonPath("$.id").value(3));
     }
     //add new department test
     @Test
     public void addDepartmentTest() throws Exception {
         mockMvc.perform(post("/departments")
-                .content(asJsonString(new DepartmentInDto("Main Department", 1L)))
                 .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(new DepartmentInDto("Six Department", 6L)))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", Matchers.is("Main Department")))
-                .andExpect(jsonPath("$.bossId", Matchers.is(1)));
+                .andExpect(jsonPath("$.name", Matchers.is("Six Department")))
+                .andExpect(jsonPath("$.bossId", Matchers.is(6)));
     }
     //update department test
     @Test
     public void updateDepartmentTest() throws Exception {
-        mockMvc.perform(put("/departments/{id}", 2)
+        mockMvc.perform(put("/departments/{id}", 7)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(new DepartmentInDto("Not", 1L)))
+                .content(asJsonString(new DepartmentInDto("Dep4", 6L)))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Not"))
-                .andExpect(jsonPath("$.bossId").value(1));
+                .andExpect(jsonPath("$.name").value("Dep4"))
+                .andExpect(jsonPath("$.bossId").value(6));
     }
     //delete department test
     @Test
