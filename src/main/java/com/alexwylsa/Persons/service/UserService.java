@@ -36,7 +36,7 @@ public class UserService {
             userRepo.save(new User(null, "admin", encoder.encode("123"), true, roles));
         }
     }
-    //get all departments with parameters
+    //get all users with parameters
     public List<User> qetAllUser(Optional<String> username, Integer page, Integer size, String byColumn,
                                  Integer ascending) {
         log.debug("qetAllUser: username = {}, page = {}, size = {}, byColumn = {}, ascending = {}", username,

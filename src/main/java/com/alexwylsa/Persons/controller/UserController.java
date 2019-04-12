@@ -59,7 +59,6 @@ public class UserController {
         log.info("deleteUser: id = {}, user = {}", id, user);
         userService.deleteUser(id, user);
     }
-
     //get all roles
     @GetMapping("/roles")
     public List<Role> getAllUserRoles(@AuthenticationPrincipal User user) {
