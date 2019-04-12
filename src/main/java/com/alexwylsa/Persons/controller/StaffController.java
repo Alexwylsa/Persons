@@ -18,7 +18,6 @@ import java.util.Optional;
 @Log4j2
 @RestController
 @RequestMapping("/staff")
-
 public class StaffController {
     @Autowired
     private StaffService staffService;

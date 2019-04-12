@@ -3,10 +3,7 @@ package com.alexwylsa.Persons.service;
 import com.alexwylsa.Persons.domain.Role;
 import com.alexwylsa.Persons.domain.User;
 import com.alexwylsa.Persons.domain.UserInDto;
-import com.alexwylsa.Persons.exceptions.AlreadyExistsException;
-import com.alexwylsa.Persons.exceptions.FileStorageException;
-import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
-import com.alexwylsa.Persons.exceptions.NotFoundException;
+import com.alexwylsa.Persons.exceptions.*;
 import com.alexwylsa.Persons.repo.UserRepo;
 import com.alexwylsa.Persons.parameters.SortParameters;
 import lombok.extern.log4j.Log4j2;
@@ -24,10 +21,8 @@ import java.util.*;
 public class UserService {
     @Autowired
     private UserRepo userRepo;
-
     @Autowired
     private SortParameters sortParameters;
-
     @Autowired
     private PasswordEncoder encoder;
     @Value("${upload.path}")
@@ -59,13 +54,13 @@ public class UserService {
     //get one user
     public User getOneUser(Long id) {
         log.debug("getOneUser: id = {} ", id);
-        return userRepo.findById(id).orElseThrow(() -> new NotFoundException());
+        return userRepo.findById(id).orElseThrow(() -> new RestException(ErrorCodes.USER_NOT_FOUND));
     }
     //add new user
     public User addUser(UserInDto userInData) {
         log.debug("addUser: userInData = {} ", userInData);
         if (userRepo.existsByUsername(userInData.getUsername())) {
-            throw new AlreadyExistsException("User already exist. Please choose another username");
+            throw new RestException(ErrorCodes.USER_ALREADY_EXIST);
         }
         User user = new User();
         Set<Role> roles = new HashSet<>();
@@ -79,7 +74,8 @@ public class UserService {
     //update user
     public User updateUser(Long id, UserInDto userInData) {
         log.debug("addUser: id = {}, userInData = {} ", id, userInData);
-       User userFromDb  = userRepo.findById(id).orElseThrow(()->new NotFoundException());
+       User userFromDb  = userRepo.findById(id)
+               .orElseThrow(() -> new RestException(ErrorCodes.USER_NOT_FOUND));
        userFromDb.setUsername(userInData.getUsername());
        userFromDb.setPassword(encoder.encode(userInData.getPassword()));
        return userRepo.save(userFromDb);

@@ -2,7 +2,8 @@ package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Staff;
 import com.alexwylsa.Persons.domain.User;
-import com.alexwylsa.Persons.exceptions.FileStorageException;
+import com.alexwylsa.Persons.exceptions.ErrorCodes;
+import com.alexwylsa.Persons.exceptions.RestException;
 import com.alexwylsa.Persons.repo.StaffRepo;
 import com.alexwylsa.Persons.repo.UserRepo;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +43,6 @@ public class EmailService {
                 .append(staffFrom.getFirstName())
                 .append(" ").append(staffFrom.getLastName()).append("\n")
                 .append(text);
-
         // Create a Simple MailMessage.
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(staffMailFrom);
@@ -55,8 +55,8 @@ public class EmailService {
             return "Email Sent!";
         }
         catch (Exception ex) {
-            throw new FileStorageException("Sending failed", ex);
+            throw new RestException(ErrorCodes.EMAIL_SENDING_FAILED);
         }
     }
-    }
+}
 

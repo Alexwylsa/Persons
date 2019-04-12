@@ -16,10 +16,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-
     @Autowired
     private UserService userService;
-
     //get all users
     @GetMapping
     public List<User> getAllUser(@RequestParam(required = false) Optional<String> username,

@@ -2,9 +2,7 @@ package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Department;
 import com.alexwylsa.Persons.domain.DepartmentInDto;
-import com.alexwylsa.Persons.exceptions.AlreadyExistsException;
-import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
-import com.alexwylsa.Persons.exceptions.NotFoundException;
+import com.alexwylsa.Persons.exceptions.*;
 import com.alexwylsa.Persons.repo.DepartmentRepo;
 import com.alexwylsa.Persons.parameters.SortParameters;
 import lombok.extern.log4j.Log4j2;
@@ -41,13 +39,14 @@ public class DepartmentService {
     //get one department
     public Department getDepartment(Long id) {
         log.debug("getDepartment: id = {} ", id);
-        return  departmentRepo.findById(id).orElseThrow(() -> new NotFoundException());
+        return  departmentRepo.findById(id)
+                .orElseThrow(() -> new RestException(ErrorCodes.DEPARTMENT_NOT_FOUND));
     }
     //add new department
     public Department addDepartment(DepartmentInDto departmentInData) {
         log.debug("getDepartment: departmentInData = {} ", departmentInData);
         if (departmentRepo.existsByName(departmentInData.getName())) {
-            throw new AlreadyExistsException("Department already exist. Please choose another department name");
+            throw new RestException(ErrorCodes.DEPARTMENT_ALREADY_EXIST);
         }
         Department department = new Department();
         department.setName(departmentInData.getName());
@@ -57,7 +56,8 @@ public class DepartmentService {
     //update department
     public Department updateDepartment(Long id, DepartmentInDto departmentInData) {
         log.debug("addDepartment: id = {}, departmentInData = {}", id, departmentInData);
-        Department departmentFromDb = departmentRepo.findById(id).orElseThrow(()->new NotFoundException());
+        Department departmentFromDb = departmentRepo.findById(id)
+                .orElseThrow(() -> new RestException(ErrorCodes.DEPARTMENT_NOT_FOUND));
        departmentFromDb.setName(departmentInData.getName());
        departmentFromDb.setBossId(departmentInData.getBossId());
         return departmentRepo.save(departmentFromDb);

@@ -46,7 +46,6 @@ public class UserServiceTest{
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
     }
-
     //add user
     @Test
     public void addUserTest() throws Exception {
@@ -57,7 +56,6 @@ public class UserServiceTest{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username", Matchers.is("user")));
     }
-
     //update users by id
     @Test
     public void updateUsersByIdTest() throws Exception {
@@ -68,7 +66,6 @@ public class UserServiceTest{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("user1"));
     }
-
     //get all users with parameters
     @Test
     public void getAllUsersTest() throws Exception {
@@ -79,7 +76,6 @@ public class UserServiceTest{
                 .andExpect(jsonPath("$.[0].id").exists())
                 .andExpect(jsonPath("$.[0].username").isNotEmpty());
     }
-
     //get one user by id
     @Test
     public void getUsersByIdTest() throws Exception {
@@ -89,7 +85,6 @@ public class UserServiceTest{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1));
     }
-
     //delete user by id
     @Test
     public void deleteUserTest() throws Exception {

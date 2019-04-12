@@ -11,12 +11,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Table(name= "department")
-
 public class Department {
     @Id
     @GeneratedValue()
     private Long id;
     private String name;
-
     private Long bossId;
 }

@@ -15,5 +15,4 @@ public class StaffInDto {
     private String sex;
     private Long department_id;
     private Long user_id;
-
 }

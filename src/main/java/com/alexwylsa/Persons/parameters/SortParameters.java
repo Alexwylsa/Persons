@@ -1,9 +1,7 @@
 package com.alexwylsa.Persons.parameters;
 
 import com.alexwylsa.Persons.domain.User;
-import com.alexwylsa.Persons.exceptions.AlreadyExistsException;
-import com.alexwylsa.Persons.exceptions.DeleteUserExeption;
-import com.alexwylsa.Persons.exceptions.NotFoundException;
+import com.alexwylsa.Persons.exceptions.*;
 import com.alexwylsa.Persons.repo.UserRepo;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +39,14 @@ public class SortParameters {
             return Sort.Direction.DESC;
         }
     }
-
+    //so that the user could not delete himself
     public void deleteUserСheck(Long id, User user) {
         if (Objects.isNull(id)) {
-            new DeleteUserExeption("user wrong id");
+            throw new RestException(ErrorCodes.USER_WRONG_ID);
         }
         if (user.getId().equals(id)) {
-            new DeleteUserExeption("user can't delete himself");
+            throw new RestException(ErrorCodes.USER_CANT_DELETE_HIMSELF);
         }
-        userRepo.findById(id).orElseThrow(() -> new NotFoundException());
+        userRepo.findById(id).orElseThrow(() -> new RestException(ErrorCodes.USER_NOT_EXIST));
     }
-
 }

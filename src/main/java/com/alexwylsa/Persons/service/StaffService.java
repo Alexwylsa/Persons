@@ -2,9 +2,7 @@ package com.alexwylsa.Persons.service;
 
 import com.alexwylsa.Persons.domain.Staff;
 import com.alexwylsa.Persons.domain.StaffInDto;
-import com.alexwylsa.Persons.exceptions.FileStorageException;
-import com.alexwylsa.Persons.exceptions.MyFileNotFoundException;
-import com.alexwylsa.Persons.exceptions.NotFoundException;
+import com.alexwylsa.Persons.exceptions.*;
 import com.alexwylsa.Persons.repo.DepartmentRepo;
 import com.alexwylsa.Persons.repo.StaffRepo;
 import com.alexwylsa.Persons.repo.UserRepo;
@@ -54,7 +52,7 @@ public class StaffService {
     //get one staff
     public Staff getStaff(Long id) {
         log.debug("getStaff: id = {} ", id);
-        return staffRepo.findById(id).orElseThrow(() -> new NotFoundException());
+        return staffRepo.findById(id).orElseThrow(() -> new RestException(ErrorCodes.STAFF_NOT_FOUND));
     }
     //add new staff
     public Staff addStaff(StaffInDto staffInData) {
@@ -66,28 +64,35 @@ public class StaffService {
         staff.setLastName(staffInData.getLastName());
         staff.setMail(staffInData.getMail());
         staff.setSex(staffInData.getSex());
-        staff.setDepartment(departmentRepo.findById(staffInData.getDepartment_id()).orElseThrow(()->new NotFoundException()));
-        staff.setUser(userRepo.findById(staffInData.getUser_id()).orElseThrow(()->new NotFoundException()));
+        staff.setDepartment(departmentRepo.findById(staffInData.getDepartment_id())
+                .orElseThrow(() -> new RestException(ErrorCodes.DEPARTMENT_NOT_EXIST)));
+        if(staffInData.getUser_id()!=null) {
+            staff.setUser(userRepo.findById(staffInData.getUser_id())
+                    .orElseThrow(() -> new RestException(ErrorCodes.USER_NOT_EXIST)));
+        }
         return staffRepo.save(staff);
     }
     //update staff
     public Staff updateStaff(Long id, StaffInDto staffInData) {
         log.debug("updateStaff: id = {}, staff = {}", id, staffInData);
-        Staff staffFromDb = staffRepo.findById(id).orElseThrow(()->new NotFoundException());
+        Staff staffFromDb = staffRepo.findById(id)
+                .orElseThrow(() -> new RestException(ErrorCodes.STAFF_NOT_FOUND));
         staffFromDb.setAge(staffInData.getAge());
         staffFromDb.setFirstName(staffInData.getFirstName());
         staffFromDb.setLastName(staffInData.getLastName());
         staffFromDb.setMail(staffInData.getMail());
         staffFromDb.setSex(staffInData.getSex());
-        staffFromDb.setDepartment(departmentRepo.findById(staffInData.getDepartment_id()).orElseThrow(()->new NotFoundException()));
-        staffFromDb.setUser(userRepo.findById(staffInData.getUser_id()).orElseThrow(()->new NotFoundException()));
+        staffFromDb.setDepartment(departmentRepo.findById(staffInData.getDepartment_id())
+                .orElseThrow(() -> new RestException(ErrorCodes.DEPARTMENT_NOT_EXIST)));
+        staffFromDb.setUser(userRepo.findById(staffInData.getUser_id())
+                .orElseThrow(() -> new RestException(ErrorCodes.USER_NOT_EXIST)));
         return staffRepo.save(staffFromDb);
     }
     //delete staff
     public void deleteStaff(Long id, Staff staff) {
         log.debug("deleteStaff: id = {}, staff = {}", id, staff);
         try {Files.delete(Paths.get(uploadPath + "/" + id + ".jpg"));}
-        catch (IOException e){throw new MyFileNotFoundException("File not found");}
+        catch (IOException e){throw new RestException(ErrorCodes.FILE_NOT_FOUND);}
         staffRepo.delete(staff);
     }
     //add new photo
@@ -95,28 +100,29 @@ public class StaffService {
         log.debug("deleteStaff: id = {}, file = {}", id, file);
         try {
             Files.write(Paths.get(uploadPath + "/" + id + ".jpg"), file);
-            Staff staffFromDb = staffRepo.findById(id).orElseThrow(NotFoundException::new);
+            Staff staffFromDb = staffRepo.findById(id)
+                    .orElseThrow(() -> new RestException(ErrorCodes.STAFF_NOT_FOUND));
             staffFromDb.setPhotoFilePath(id.toString());
             staffRepo.save(staffFromDb);
         }
-        catch (IOException ex) {throw new FileStorageException("Sending failed", ex);}
+        catch (IOException ex) {throw new RestException(ErrorCodes.FILE_SENDING_FAILED);}
     }
     //get photo
     public byte[] getPhoto(Long id) {
         try {
             return Files.readAllBytes(new File(uploadPath + "/" + id + ".jpg").toPath());
         }
-        catch (IOException e){throw new MyFileNotFoundException("File not found");
-        }
+        catch (IOException e){throw new RestException(ErrorCodes.FILE_NOT_FOUND);}
     }
     //delete photo
     public void deletePhoto(Long id) {
         try {
             Files.delete(Paths.get(uploadPath + "/" + id + ".jpg"));
-            Staff staffFromDb = staffRepo.findById(id).orElseThrow(NotFoundException::new);
+            Staff staffFromDb = staffRepo.findById(id)
+                    .orElseThrow(() -> new RestException(ErrorCodes.STAFF_NOT_FOUND));
             staffFromDb.setPhotoFilePath("");
             staffRepo.save(staffFromDb);
         }
-        catch (IOException e){throw new MyFileNotFoundException("File not found");}
+        catch (IOException e){throw new RestException(ErrorCodes.FILE_NOT_FOUND);}
     }
 }
